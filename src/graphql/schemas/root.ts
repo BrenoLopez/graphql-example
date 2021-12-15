@@ -9,7 +9,7 @@ type Query{
 type Mutation{
     register(email: String!, password:String!,confirmation:String!):RegisteredUser
     login(email:String!,password:String!):AccessToken
-    confirm(email:String!):Boolean
+    confirm(email:String!):Confirm
     profile(uniqueKey:String!):Profile   
 }
 type Profile{
@@ -24,29 +24,31 @@ type AccessToken{
 type Test{
     test:String
 }
+type Confirm{
+  confirm:Boolean
+}
 `);
 
 export const root = {
   register: async (
-    {
-      email,
-      password,
-      confirmation,
-    }: { email: string; password: string; confirmation: string },
+    data: { email: string; password: string; confirmation: string },
     context: any
   ) => {
+    console.log(data);
     return {
       id: randomBytes(20).toString("hex"),
     };
   },
-  login: async (
-    { email, password }: { email: string; password: string },
-    context: any
-  ) => {
+  login: async (data: { email: string; password: string }, context: any) => {
+    console.log(data);
     return { accessToken: randomBytes(64).toString("hex") };
   },
-  profile: async ({ id }: { id: string }, context: any) => {
+  profile: async (data: { id: string }, context: any) => {
+    console.log(data);
     return { email: "breno.souza@usemobile.xyz" };
   },
+  // confirm: ({ email }: { email: string }) => ({
+  //   confirm: email === "breno.souza@usemobile.xyz",
+  // }),
   test: ({ test }: { test: String }) => ({ test }),
 };
